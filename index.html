@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>To-Do App</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: url('https://images.unsplash.com/photo-1519241047957-be31d7379a5d?auto=format&fit=crop&w=1600&q=80') no-repeat center center fixed;
+            background-size: cover;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 60px;
+        }
+
+        .todo-container {
+            background-color: rgba(255, 255, 255, 0.92);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .todo-container h1 {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="todo-container">
+        <h1 class="mb-4 text-center">My To-Do List</h1>
+
+        <!-- ✅ Flash message alert -->
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+              {{ messages[0] }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          {% endif %}
+        {% endwith %}
+
+        <form method="POST" action="/add" class="d-flex mb-4">
+            <input type="text" name="task" class="form-control me-2" placeholder="Enter a task" required>
+            <button type="submit" class="btn btn-primary">Add</button>
+            <a href="/logout" class="btn btn-secondary ms-2">Logout</a>
+        </form>
+
+        <ul class="list-group">
+            {% for task in tasks %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span class="{{ 'text-decoration-line-through' if task.done }}">{{ task.task }}</span>
+                <div>
+                    <form action="/complete/{{ task.id }}" method="post" class="d-inline">
+                        <button type="submit" class="btn btn-success btn-sm">Complete</button>
+                    </form>
+                    <form action="/delete/{{ task.id }}" method="post" class="d-inline">
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
